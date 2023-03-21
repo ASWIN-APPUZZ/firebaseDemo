@@ -12,6 +12,9 @@
         android:theme="@style/Theme.FirebaseDemo"
         tools:targetApi="31">
         <activity
+            android:name=".newActivity"
+            android:exported="false" />
+        <activity
             android:name=".mobileotpActivity"
             android:exported="false" />
         <activity

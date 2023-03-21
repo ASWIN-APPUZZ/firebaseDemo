@@ -49,10 +49,6 @@ public class registrationActivity extends AppCompatActivity {
         Fauth = FirebaseAuth.getInstance();
         fstore =  FirebaseFirestore.getInstance();
 
-
-
-
-
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +80,7 @@ public class registrationActivity extends AppCompatActivity {
                                     Map<String, Object> user = new HashMap<>();
                                     user.put("Full Name", Name);
                                     user.put("Email",Email);
+                                    //user.document("NE").set(user);
                                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
@@ -113,8 +110,6 @@ public class registrationActivity extends AppCompatActivity {
             }
         });
 
-
-
         // Go to login page
         registered.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +119,6 @@ public class registrationActivity extends AppCompatActivity {
             }
         });
 
-        
+
     }
 }
