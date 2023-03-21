@@ -19,12 +19,19 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class registrationActivity extends AppCompatActivity {
 
         TextView registered;
         EditText name, email,password, confirmpassword;
         FirebaseAuth Fauth;
+        FirebaseFirestore fstore;
+
         Button btn;
 
     @Override
@@ -37,12 +44,19 @@ public class registrationActivity extends AppCompatActivity {
         email = findViewById(R.id.tv_email);
         password = findViewById(R.id.tv_pwd1);
         confirmpassword = findViewById(R.id.tv_cnfrmpwd);
-        Fauth = FirebaseAuth.getInstance();
         btn = findViewById(R.id.btnSubmit1);
+
+        Fauth = FirebaseAuth.getInstance();
+        fstore =  FirebaseFirestore.getInstance();
+
+
+
+
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String Name= name.getText().toString();
                 String Email = email.getText().toString();
                 String Password = password.getText().toString();
                 Fauth.createUserWithEmailAndPassword(Email,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -62,6 +76,25 @@ public class registrationActivity extends AppCompatActivity {
 //                                            startActivity(intent);
 //                                        }
 //                                    });
+
+                                    String userId = Fauth.getCurrentUser().getUid();
+
+                                    // Ading content into firestore
+                                    DocumentReference documentReference = fstore.collection("user").document(userId);
+                                    Map<String, Object> user = new HashMap<>();
+                                    user.put("Full Name", Name);
+                                    user.put("Email",Email);
+                                    documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Toast.makeText(registrationActivity.this, "User Profile is Created", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(registrationActivity.this, "User creation Failure", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -75,9 +108,10 @@ public class registrationActivity extends AppCompatActivity {
                 });
 
 
+
+
             }
         });
-
 
 
 
@@ -89,5 +123,7 @@ public class registrationActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        
     }
 }
